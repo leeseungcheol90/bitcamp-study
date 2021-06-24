@@ -1,151 +1,51 @@
 package com.eomcs;
-import java.util.Date;
+
 import java.util.Scanner;
 
 public class App {
 
-  // 한 개의 게시글을 담을 변수를 설계
-  static class Board {
-    String title;
-    String content;
-    String password;
-    int viewCount;
-    Date createdDate;
-  }
+  // 한 개의 게시글을 담을 복합 데이터의 변수를 설계
 
-  static final int BOARD_LENGTH=100;
-  static Board[] boards=new Board[BOARD_LENGTH];
-  static int size=0;
-  static Scanner keyScan=new Scanner(System.in);
+  static Scanner keyScan = new Scanner(System.in);
 
   public static void main(String[] args) {
-    // TODO Auto-generated method stub
-    System.out.println("[게시판 관리]");
 
-    loop: while (true) {
-      System.out.print("명령> ");
-      String command=keyScan.nextLine();
+    // App 클래스에서 만든 Scanner 인스턴스를 BoardHandler,MemberHandler 와 같이 쓴다.
+    BoardHandler.keyScan = keyScan;
+    MemberHandler.keyScan = keyScan;
+    ComputeHandler.keyScan = keyScan;
 
-      switch (command) {
-        case "list":list();break;
-        case "add":add();break;
-        case "update":update();break;
-        case "delete":delete();break;
-        case "view":view();break;
-        case "quit":break loop;
+    BoardHandler boardHandler=new BoardHandler();
+    MemberHandler memberHandler=new MemberHandler();
+    ComputeHandler computeHandler=new ComputeHandler();
+
+    menuLoop: while (true) {
+      System.out.println("[메뉴]");
+      System.out.println("  1: 게시글 관리");
+      System.out.println("  2: 회원 관리");
+      System.out.println("  3: 계산기");
+      System.out.print("메뉴를 선택하시오. (종료: quit) [1..3] ");
+      String menuNo = keyScan.nextLine();
+
+      switch (menuNo) {
+        case "1":
+          boardHandler.execute();
+          break;
+        case "2":
+          memberHandler.execute();
+          break;
+        case "3":
+          computeHandler.execute();
+          break;
+        case "quit":
+          break menuLoop;
         default:
-          System.out.println("지원하지 않는 명령입니다.");
+          System.out.println("메뉴 번호가 옳지 않습니다.");
       }
+      System.out.println();
     }
+
     keyScan.close();
-    System.out.println("안녕히 가세요");
-  }
-
-  static void list() {
-    System.out.println("[게시물 목록]");
-
-    for (int i=0;i<size;i++) {
-      Board board=boards[i];
-      System.out.printf("%d,%s,%s,%d\n",i,board.title,String.format("%1$tY-%1$tm-%1$td",board.createdDate),board.viewCount);
-    }
-  }
-
-  static void add() {
-    System.out.println("[게시물 등록]");
-
-    if (size==BOARD_LENGTH) {
-      System.out.println("더 이상 게시글을 추가할 수 없습니다.");
-      return;
-    }
-    // 한 개의 게시글 데이터를 저장할 변수를 준비한다..
-    Board board=new Board();
-
-    System.out.println("제목 : ");
-    board.title=keyScan.nextLine();
-
-    System.out.println("내용 : ");
-    board.content=keyScan.nextLine();
-
-    System.out.print("비밀번호 : ");
-    board.password=keyScan.nextLine();
-
-    board.createdDate=new Date(); // 현재 날짜와 시간을 생성하여 배열에 저장한다.
-    boards[size++]=board;
-
-    System.out.println("게시글을 등록햇습니다.");
-  }
-
-  static void update() {
-    System.out.println("[게시물 변경]");
-    System.out.println("번호>");
-    int index=Integer.parseInt(keyScan.nextLine());
-
-    if (index <0 || index>=size) {
-      System.out.println("무효한 게시글 번호입니다.");
-      return;
-    }
-
-    Board board=boards[index];
-
-    System.out.printf("제목(%s)?",board.title);
-    String title=keyScan.nextLine();
-    System.out.printf("내용(%s)?",board.content);
-    String content=keyScan.nextLine();
-
-    System.out.print("정말 변경할거임?(y/n)");
-    String input=keyScan.nextLine();
-
-    if (input.equals("n")) {
-      System.out.print("게시글 변경을 취소했습니다.");
-      return;
-    }
-
-    board.title=title;
-    board.content=content;
-    System.out.println("게시글을 변경하였습니다.");
-  }
-
-  static void delete() {
-    System.out.println("[게시물 삭제]");          
-    System.out.println("번호>");
-    int index=Integer.parseInt(keyScan.nextLine());
-
-    if (index <0 || index>=size) {
-      System.out.println("무효한 게시글 번호입니다.");
-      return;
-    }
-
-    System.out.print("정말 삭제할거임?(y/n)");          
-
-    if (keyScan.nextLine().equals("n")) {
-      System.out.println("게시글 삭제를 취소했습니다.");
-      return;
-    }
-
-    for (int i=index;i<size-1;i++) {
-      boards[i]=boards[i+1];
-    }
-
-    size--;
-
-    System.out.println("게시글을 삭제하였습니다.");
-  }
-
-  static void view() {
-    System.out.println("[게시물 조회]");
-    System.out.println("번호>");
-    int index=Integer.parseInt(keyScan.nextLine());
-
-    if (index <0 || index>=size) {
-      System.out.println("무효한 게시글 번호입니다.");
-      return;
-    }
-    Board board=boards[index];
-    board.viewCount++;
-
-    System.out.printf("제목:%s%n",board.title);
-    System.out.printf("내용:%s%n",board.content);
-    System.out.printf("조회수:%s%n",board.viewCount);
-    System.out.printf("등록일:%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS\n",board.createdDate);
+    System.out.println("안녕히 가세요!");
   }
 }
