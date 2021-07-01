@@ -11,6 +11,12 @@ public class Work05Hotel {
   private String guestName;
   Scanner sc=new Scanner(System.in);
 
+  public static void main(String[] args) {
+    // TODO Auto-generated method stub
+    Work05Hotel wh=new Work05Hotel("남산하얏트");
+    wh.process();
+  }
+
   void process() {
     int sel=9;
 
@@ -128,12 +134,6 @@ public class Work05Hotel {
 
   Work05Hotel(String name, int year) {
 
-  }
-
-  public static void main(String[] args) {
-    // TODO Auto-generated method stub
-    Work05Hotel wh=new Work05Hotel("남산하얏트");
-    wh.process();
   }
 
 }
