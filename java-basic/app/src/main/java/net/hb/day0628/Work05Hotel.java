@@ -112,7 +112,7 @@ public class Work05Hotel {
         if (j==4) {
           System.out.println();
           for (int k=0;k<name[i].length;k++) {
-            System.out.print(name[i][k].toString()+"\t\t");          
+            System.out.print(name[i][k].toString()+"\t");          
           }
           System.out.println();
         }
@@ -120,8 +120,17 @@ public class Work05Hotel {
     }
   }
 
-  void list() { // 영림쌤 구현
-
+  void list() {
+    String nemo="";
+    for (int i=0;i<name.length;i++) { //i는 0~2까지.
+      for (int j=0;j<name[i].length;j++) { //j는 0~4까지.
+        String guestName=name[i][j];
+        nemo=(guestName!="") ? "■" : "□";        
+        if (guestName!="") System.out.print((i+1)+"0"+(j+1)+"호"+nemo+guestName+"\t\t");        
+        else System.out.print((i+1)+"0"+(j+1)+"호"+nemo+guestName+"\t\t\t\t");
+      }
+      System.out.println();
+    }    
   }
 
   Work05Hotel() {
